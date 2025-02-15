@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { capitalizeFirstLetter } from "../utils";
+import Link from 'next/link'
 // import { Link } from "react-router-dom";
 
 // import { GetImageById } from "../../functions/utils";
@@ -24,6 +25,9 @@ const PokeCard = ({ name, id, types, image }: Pokemon) => {
   }, [id]);
 
   return (
+    <Link href={{
+      pathname: `/details/${name}`,
+    }}>
     <Card
       sx={{
         height: "250px",
@@ -78,6 +82,7 @@ const PokeCard = ({ name, id, types, image }: Pokemon) => {
         </Box>
       </CardContent>
     </Card>
+    </Link>
   );
 };
 
