@@ -1,95 +1,124 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client'
 
-export default function Home() {
+import { useState, useEffect } from "react";
+import Header from "../components/Header";
+import api from "../services/api";
+import { Pokemon } from "../types";
+import PokeCard from "../components/PokeCard";
+import InfiniteScroll from "react-infinite-scroll-component";
+import CircularProgress from "@mui/material/CircularProgress";
+import Grid from "@mui/material/Grid2";
+import { savePokemons, verifyPokemons } from "../storage";
+import { Box } from "@mui/material";
+
+let pokemonsOriginal: any[] = [];
+const perPage = 25;
+const limit = 151;
+let max = 0;
+
+const Home = () => {
+  const [loading, setLoading] = useState(true);
+  const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+
+  const handlerResult = (maximum: number, pokemons: Pokemon[]) => {
+    max = maximum;
+    setPokemons(pokemons);
+  };
+
+  const loadPokemons = async () => {
+    let pokeList = await api.get(`/pokemon?limit=${limit}`);
+    console.log(pokeList)
+    const all: Pokemon[] = [];
+    for (var i = 0; i < pokeList.data.results.length; i++) {
+      let pokeDetails = await api.get(
+        `/pokemon/${pokeList.data.results[i].name}`
+      );
+
+      var obj = {
+        name: pokeDetails.data.name,
+        id: pokeDetails.data.id,
+        types: pokeDetails.data.types,
+        number: pokeDetails.data.id.toString().padStart(3, "0"),
+        image:
+          pokeDetails.data.sprites.versions["generation-v"]["black-white"]
+            .animated.front_default,
+      };
+      all.push(obj);
+    }
+
+    console.log(all);
+    savePokemons(all);
+    pokemonsOriginal = all;
+    handlerResult(all.length, all);
+    // SavePokemons(all);
+    // pokemonsOriginal = all;
+    // HandlerResult(all.length, all);
+    setLoading(false);
+  };
+
+  function LoadMore() {
+    console.log("print");
+    setTimeout(() => {
+      var limit = pokemons.length + perPage;
+
+      setPokemons(pokemonsOriginal.slice(0, limit));
+
+      // } else {
+      //   var filterPokemons = pokemonsOriginal.filter((item) => {
+      //     return (
+      //       item.name.includes(query.toLowerCase()) ||
+      //       item.number.includes(query)
+      //     );
+      //   });
+      //   setPokemons(filterPokemons.slice(0, limit));
+      // }
+    }, 1000);
+  }
+
+  // const getData = async () => {
+  //     loadPokemons();
+  // }
+
+  useEffect(() => {
+    setLoading(true);
+    const listLocal = verifyPokemons();
+    if (listLocal === null) {
+      loadPokemons();
+    }
+
+    pokemonsOriginal = listLocal;
+    handlerResult(listLocal?.length, listLocal?.slice(0, perPage));
+    setLoading(false)
+  }, []);
+  // console.log(pokemons.leng)
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+    <Box>
+      <Header />
+      {loading || !(pokemons?.length) ? (
+         <CircularProgress size={20} />
+      ) : (
+        <InfiniteScroll
+          style={{ overflow: "none" }}
+          dataLength={pokemons.length}
+          next={LoadMore}
+          hasMore={pokemons.length < max}
+          loader={
+            <div className="mb-4 d-flex justify-content-center align-item-center">
+              <CircularProgress size={20} />
+            </div>
+          }
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+          <Grid container mt={4} spacing={3}>
+            {pokemons.map((p, index) => (
+              <Grid size={{ md: 4, sm: 6, xs: 12 }}>
+                <PokeCard {...p} key={index} />
+              </Grid>
+            ))}
+          </Grid>
+        </InfiniteScroll>
+      )}
+    </Box>
   );
-}
+};
+
+export default Home;
