@@ -11,7 +11,7 @@ import Grid from "@mui/material/Grid2";
 import { savePokemons, verifyPokemons } from "../storage";
 import { Box } from "@mui/material";
 
-let pokemonsOriginal: any[] = [];
+let pokemonsOriginal: Pokemon[] = [];
 const perPage = 25;
 const limit = 151;
 let max = 0;
@@ -26,11 +26,11 @@ const Home = () => {
   };
 
   const loadPokemons = async () => {
-    let pokeList = await api.get(`/pokemon?limit=${limit}`);
+    const pokeList = await api.get(`/pokemon?limit=${limit}`);
     console.log(pokeList)
     const all: Pokemon[] = [];
-    for (var i = 0; i < pokeList.data.results.length; i++) {
-      let pokeDetails = await api.get(
+    for (let i = 0; i < pokeList.data.results.length; i++) {
+      const pokeDetails = await api.get(
         `/pokemon/${pokeList.data.results[i].name}`
       );
 
