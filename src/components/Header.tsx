@@ -1,12 +1,19 @@
+import { Box } from "@mui/material"
 
 const Header = () => {
   return (
-    <div>
+    <Box
+      component='div'
+      sx={{
+        display: 'flex',
+        justifyContent: 'center'
+      }}
+    >
       <img
         src="/assets/logo_pokedex.png"
-        height='120'
+        height='100'
       />
-    </div>
+    </Box>
   )
 }
 

@@ -49,3 +49,7 @@ export type PokemonDetailComp = {
   abilities: string,
   habitat: string,
 }
+
+export type PokemonCard = Pokemon & {
+  isClickable?: boolean
+}

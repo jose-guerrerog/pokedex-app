@@ -22,11 +22,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding: 16px;
 }
 
 * {
   box-sizing: border-box;
-  padding: 4px;
   margin: 0;
 }
 

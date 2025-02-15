@@ -111,7 +111,7 @@ const Home = () => {
           <Grid container mt={4} spacing={3}>
             {pokemons.map((p, index) => (
               <Grid size={{ md: 4, sm: 6, xs: 12 }} key={index}>
-                <PokeCard {...p} key={index} />
+                <PokeCard {...p} key={index} isClickable />
               </Grid>
             ))}
           </Grid>
