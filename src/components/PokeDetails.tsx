@@ -13,7 +13,7 @@ const PokeDetails = ({
   capture_rate,
   habitat,
 }: PokemonDetailComp) => {
-  const [_, setError] = useState(false);
+  const [, setError] = useState(false);
 
   useEffect(() => {
     setError(false);

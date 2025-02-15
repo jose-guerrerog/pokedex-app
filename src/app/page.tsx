@@ -34,7 +34,7 @@ const Home = () => {
         `/pokemon/${pokeList.data.results[i].name}`
       );
 
-      var obj = {
+      const obj = {
         name: pokeDetails.data.name,
         id: pokeDetails.data.id,
         types: pokeDetails.data.types,
@@ -59,7 +59,7 @@ const Home = () => {
   function LoadMore() {
     console.log("print");
     setTimeout(() => {
-      var limit = pokemons.length + perPage;
+      const limit = pokemons.length + perPage;
 
       setPokemons(pokemonsOriginal.slice(0, limit));
 
@@ -110,7 +110,7 @@ const Home = () => {
         >
           <Grid container mt={4} spacing={3}>
             {pokemons.map((p, index) => (
-              <Grid size={{ md: 4, sm: 6, xs: 12 }}>
+              <Grid size={{ md: 4, sm: 6, xs: 12 }} key={index}>
                 <PokeCard {...p} key={index} />
               </Grid>
             ))}

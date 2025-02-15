@@ -17,7 +17,7 @@ import {
 import { mapTypeBackground, mapTypeColor } from "../constants";
 
 const PokeCard = ({ name, id, types, image }: Pokemon) => {
-  const [_, setError] = useState(false);
+  const [, setError] = useState(false);
 
   useEffect(() => {
     setError(false);

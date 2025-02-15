@@ -19,7 +19,6 @@ const DetailsPokemon = () => {
   const params = useParams()
   const name = params.name
 
-  console.log(name)
   const loadPokemon = async () => {
     try {
       const pokemonData = await api.get(`/pokemon/${name}`);
@@ -53,7 +52,7 @@ const DetailsPokemon = () => {
 
   useEffect(() => {
     loadPokemon();
-  }, []);
+  }, [loadPokemon]);
 
   if (!pokemonDetails) {
     return null;
