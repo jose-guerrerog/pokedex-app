@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
-import { capitalizeFirstLetter } from "../utils";
 import Grid from "@mui/material/Grid2";
 import { PokemonDetailComp } from "../types";
-import { Box, Card, CardContent, CardHeader, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
 
 const PokeDetails = ({
-  name,
   id,
   height,
   weight,
