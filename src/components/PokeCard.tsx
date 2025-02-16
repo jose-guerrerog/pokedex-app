@@ -38,7 +38,7 @@ const PokeCard = ({
     >
       <Card
         sx={{
-          height: "250px",
+          minHeight: "250px",
           background: mapTypeBackground.get(types[0].type.name),
           borderRadius: 4,
         }}
@@ -82,7 +82,6 @@ const PokeCard = ({
             }}
           >
             {types.map((item, index) => {
-              console.log(item.type.name);
               return (
                 <Chip
                   label={
@@ -90,7 +89,7 @@ const PokeCard = ({
                       {capitalizeFirstLetter(item.type.name)}
                     </Typography>
                   }
-                  key={index}
+                  key={`type-${index}`}
                   sx={{
                     background: mapTypeColor.get(item.type.name),
                   }}

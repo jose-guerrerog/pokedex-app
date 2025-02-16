@@ -13,7 +13,7 @@ import { Box } from "@mui/material";
 
 let pokemonsOriginal: Pokemon[] = [];
 const perPage = 25;
-const limit = 151;
+const limit = 50;
 let max = 0;
 
 const Home = () => {
@@ -109,9 +109,9 @@ const Home = () => {
           }
         >
           <Grid container mt={4} spacing={3}>
-            {pokemons.map((p, index) => (
+            {pokemons.map((pokemon, index) => (
               <Grid size={{ md: 4, sm: 6, xs: 12 }} key={index}>
-                <PokeCard {...p} key={index} isClickable />
+                <PokeCard {...pokemon} key={`pokemon-${index}`} isClickable />
               </Grid>
             ))}
           </Grid>

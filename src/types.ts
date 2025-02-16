@@ -19,10 +19,17 @@ export type PokemonData = {
   types: [TypePokemon],
   height: number,
   weight: number,
-  stats: [string],
+  stats: [PokemonStat],
   sprites: {
     front_default: string,
   }
+}
+
+export type PokemonStat = {
+  base_stat: number,
+  stat: {
+    name: string,
+  },
 }
 
 export type PokemonDetails = {
@@ -31,7 +38,7 @@ export type PokemonDetails = {
   types: [TypePokemon],
   height: number,
   weight: number,
-  stats: [string],
+  stats: [PokemonStat],
   gender_rate: number,
   image: string,
   capture_rate: number,

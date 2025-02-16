@@ -7,6 +7,7 @@ import { PokemonDetails } from "@/types";
 import { Box } from '@mui/material';
 import PokeCard from "@/components/PokeCard";
 import PokeDetails from "@/components/PokeDetails";
+import PokeStats from "@/components/PokeStats";
 import { useParams } from "next/navigation";
 
 type Item = {
@@ -55,7 +56,7 @@ const DetailsPokemon = () => {
 
   useEffect(() => {
     loadPokemon();
-  }, [loadPokemon]);
+  }, []);
 
   if (!pokemonDetails) {
     return null;
@@ -63,8 +64,8 @@ const DetailsPokemon = () => {
 
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Grid container sx={{ maxWidth: '600px' }} spacing={2}>
-      <Grid size={6}>
+      <Grid container sx={{ maxWidth: '800px' }} spacing={2}>
+      <Grid size={{ sm: 6, xs: 12}}>
         <PokeCard
           name={pokemonDetails?.name || ""}
           id={pokemonDetails?.id || 0}
@@ -73,7 +74,7 @@ const DetailsPokemon = () => {
           number="2"
         />
       </Grid>
-      <Grid size={6}>
+      <Grid size={{ sm: 6, xs: 12}}>
         <PokeDetails
           name={pokemonDetails?.name || ""}
           id={pokemonDetails?.id || 0}
@@ -83,6 +84,11 @@ const DetailsPokemon = () => {
           weight={pokemonDetails.weight}
           abilities={pokemonDetails.abilities}
           habitat={pokemonDetails.habitat}
+        />
+      </Grid>
+      <Grid>
+        <PokeStats
+          stats={pokemonDetails.stats}
         />
       </Grid>
     </Grid>

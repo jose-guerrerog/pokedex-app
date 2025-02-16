@@ -18,30 +18,30 @@ const PokeDetails = ({
   }, [id]);
 
   return (
-    <Card>
+    <Card sx={{ minCard: '250px', borderRadius: 4 }}>
       <CardContent>
-        <Grid container>
+        <Grid container rowGap={2}>
           <Grid size={6}>
-            <Typography variant="h5">Height</Typography>
-            <Typography variant="h6">{`${Math.round(height * 10) / 100} m`}</Typography>
+            <Typography variant="h6" fontWeight={700}>Height</Typography>
+            <Typography variant="body1">{`${Math.round(height * 10) / 100} m`}</Typography>
           </Grid>
           <Grid size={6}>
-            <Typography variant="h5">Capture rate</Typography>
-            <Typography variant="h6">{`${
+            <Typography variant="h6" fontWeight={700}>Capture rate</Typography>
+            <Typography variant="body1">{`${
               Math.round(capture_rate * 100) / 100
             }%`}</Typography>
           </Grid>
           <Grid size={6}>
-            <Typography variant="h5">Weight</Typography>
-            <Typography variant="h6">{`${Math.round(weight * 10) / 100} Kg`}</Typography>
+            <Typography variant="h6" fontWeight={700}>Weight</Typography>
+            <Typography variant="body1">{`${Math.round(weight * 10) / 100} Kg`}</Typography>
           </Grid>
           <Grid size={6}>
-            <Typography variant="h5">Abilities</Typography>
-            <Typography variant="h6">{abilities}</Typography>
+            <Typography variant="h6" fontWeight={700}>Abilities</Typography>
+            <Typography variant="body1">{abilities}</Typography>
           </Grid>
           <Grid size={6}>
-            <Typography variant="h5">Habitat</Typography>
-            <Typography variant="h6">{habitat}</Typography>
+            <Typography variant="h6" fontWeight={700}>Habitat</Typography>
+            <Typography variant="body1">{habitat}</Typography>
           </Grid>
         </Grid>
       </CardContent>
