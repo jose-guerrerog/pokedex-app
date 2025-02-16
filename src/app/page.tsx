@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
@@ -12,8 +12,8 @@ import { savePokemons, verifyPokemons } from "../storage";
 import { Box } from "@mui/material";
 
 let pokemonsOriginal: Pokemon[] = [];
-const perPage = 25;
-const limit = 50;
+const perPage = 12;
+const limit = 30;
 let max = 0;
 
 const Home = () => {
@@ -27,7 +27,6 @@ const Home = () => {
 
   const loadPokemons = async () => {
     const pokeList = await api.get(`/pokemon?limit=${limit}`);
-    console.log(pokeList)
     const all: Pokemon[] = [];
     for (let i = 0; i < pokeList.data.results.length; i++) {
       const pokeDetails = await api.get(
@@ -46,38 +45,18 @@ const Home = () => {
       all.push(obj);
     }
 
-    console.log(all);
     savePokemons(all);
     pokemonsOriginal = all;
     handlerResult(all.length, all);
-    // SavePokemons(all);
-    // pokemonsOriginal = all;
-    // HandlerResult(all.length, all);
     setLoading(false);
   };
 
   function LoadMore() {
-    console.log("print");
     setTimeout(() => {
       const limit = pokemons.length + perPage;
-
       setPokemons(pokemonsOriginal.slice(0, limit));
-
-      // } else {
-      //   var filterPokemons = pokemonsOriginal.filter((item) => {
-      //     return (
-      //       item.name.includes(query.toLowerCase()) ||
-      //       item.number.includes(query)
-      //     );
-      //   });
-      //   setPokemons(filterPokemons.slice(0, limit));
-      // }
     }, 1000);
   }
-
-  // const getData = async () => {
-  //     loadPokemons();
-  // }
 
   useEffect(() => {
     setLoading(true);
@@ -88,14 +67,15 @@ const Home = () => {
 
     pokemonsOriginal = listLocal;
     handlerResult(listLocal?.length, listLocal?.slice(0, perPage));
-    setLoading(false)
+    setLoading(false);
   }, []);
-  // console.log(pokemons.leng)
   return (
     <Box>
       <Header />
-      {loading || !(pokemons?.length) ? (
-         <CircularProgress size={20} />
+      {loading || !pokemons?.length ? (
+        <Box sx={{ display: "flex", justifyContent: "center" }} mt={3}>
+          <CircularProgress size={20} />
+        </Box>
       ) : (
         <InfiniteScroll
           style={{ overflow: "none" }}
