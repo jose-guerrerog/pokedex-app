@@ -21,18 +21,6 @@ const PokeDetails = ({
 
   return (
     <Card>
-      <CardHeader
-        title={
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Typography variant="h4" sx={{ color: "#FFFFFF" }}>
-              {capitalizeFirstLetter(name)}
-            </Typography>
-            <Typography variant="h4" sx={{ color: "#FFFFFF" }}>
-              {`# ${id.toString().padStart(3, "0")}`}
-            </Typography>
-          </Box>
-        }
-      />
       <CardContent>
         <Grid container>
           <Grid size={6}>

@@ -56,15 +56,22 @@ const PokeCard = ({
           }
         />
         <CardContent>
-          <img
-            onError={() => setError(true)}
-            className="animation-up-down"
-            alt={name}
-            title={name}
-            src={image}
-            width="80"
-            height="80"
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img
+              onError={() => setError(true)}
+              className="animation-up-down"
+              alt={name}
+              title={name}
+              src={image}
+              width="80"
+              height="80"
+            />
+          </Box>
           <Box
             sx={{
               display: "flex",
