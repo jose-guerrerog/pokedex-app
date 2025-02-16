@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import api from "@/services/api";
 import Grid from "@mui/material/Grid2";
 import { PokemonDetails } from "@/types";
-import { Box } from '@mui/material';
+import { Box } from "@mui/material";
 import PokeCard from "@/components/PokeCard";
 import PokeDetails from "@/components/PokeDetails";
 import PokeStats from "@/components/PokeStats";
 import { useParams } from "next/navigation";
+import Header from "@/components/Header";
 
 type Item = {
   ability: {
@@ -63,36 +64,45 @@ const DetailsPokemon = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      <Grid container sx={{ maxWidth: '800px' }} spacing={2}>
-      <Grid size={{ sm: 6, xs: 12}}>
-        <PokeCard
-          name={pokemonDetails?.name || ""}
-          id={pokemonDetails?.id || 0}
-          types={pokemonDetails?.types}
-          image={pokemonDetails.image}
-          number="2"
-        />
-      </Grid>
-      <Grid size={{ sm: 6, xs: 12}}>
-        <PokeDetails
-          name={pokemonDetails?.name || ""}
-          id={pokemonDetails?.id || 0}
-          types={pokemonDetails?.types}
-          capture_rate={pokemonDetails.capture_rate}
-          height={pokemonDetails.height}
-          weight={pokemonDetails.weight}
-          abilities={pokemonDetails.abilities}
-          habitat={pokemonDetails.habitat}
-        />
-      </Grid>
-      <Grid>
-        <PokeStats
-          stats={pokemonDetails.stats}
-        />
-      </Grid>
-    </Grid>
-    </Box>
+    <>
+      <Header />
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+        mt={5}
+      >
+        <Grid container sx={{ maxWidth: "800px" }} spacing={2}>
+          <Grid container sx={{ alignItems: "center" }}>
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <PokeCard
+                name={pokemonDetails?.name || ""}
+                id={pokemonDetails?.id || 0}
+                types={pokemonDetails?.types}
+                image={pokemonDetails.image}
+                number="2"
+              />
+            </Grid>
+            <Grid size={{ sm: 6, xs: 12 }}>
+              <PokeDetails
+                name={pokemonDetails?.name || ""}
+                id={pokemonDetails?.id || 0}
+                types={pokemonDetails?.types}
+                capture_rate={pokemonDetails.capture_rate}
+                height={pokemonDetails.height}
+                weight={pokemonDetails.weight}
+                abilities={pokemonDetails.abilities}
+                habitat={pokemonDetails.habitat}
+              />
+            </Grid>
+          </Grid>
+          <Grid size={12} sx={{ display: "flex", justifyContent: "center" }}>
+            <PokeStats stats={pokemonDetails.stats} />
+          </Grid>
+        </Grid>
+      </Box>
+    </>
   );
 };
 
