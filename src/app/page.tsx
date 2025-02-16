@@ -13,7 +13,7 @@ import { Box } from "@mui/material";
 
 let pokemonsOriginal: Pokemon[] = [];
 const perPage = 12;
-const limit = 30;
+const limit = 20;
 let max = 0;
 
 const Home = () => {
@@ -73,8 +73,8 @@ const Home = () => {
     <Box>
       <Header />
       {loading || !pokemons?.length ? (
-        <Box sx={{ display: "flex", justifyContent: "center" }} mt={3}>
-          <CircularProgress size={20} />
+        <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+          <CircularProgress size={30} color="secondary"/>
         </Box>
       ) : (
         <InfiniteScroll
