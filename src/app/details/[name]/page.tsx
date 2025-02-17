@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/services/api";
 import Grid from "@mui/material/Grid2";
 import { PokemonDetails } from "@/types";
-import { Box } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import PokeCard from "@/components/PokeCard";
 import PokeDetails from "@/components/PokeDetails";
 import PokeStats from "@/components/PokeStats";
@@ -60,7 +60,11 @@ const DetailsPokemon = () => {
   }, []);
 
   if (!pokemonDetails) {
-    return null;
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+        <CircularProgress size={30} color="secondary" />
+      </Box>
+    );
   }
 
   return (
