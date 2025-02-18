@@ -13,7 +13,7 @@ import { Box } from "@mui/material";
 
 let pokemonsOriginal: Pokemon[] = [];
 const perPage = 12;
-const limit = 20;
+const limit = 50;
 let max = 0;
 
 const Home = () => {
@@ -28,7 +28,15 @@ const Home = () => {
   const loadPokemons = async () => {
     const pokeList = await api.get(`/pokemon?limit=${limit}`);
     const all: Pokemon[] = [];
+
+    const promises = [];
+
     for (let i = 0; i < pokeList.data.results.length; i++) {
+      promises.push(api.get(`/pokemon/${pokeList.data.results[i].name}`))
+    }
+
+    const res = await Promise.all(promises);
+    for (let i = 0; i < res.length; i++) {
       const pokeDetails = await api.get(
         `/pokemon/${pokeList.data.results[i].name}`
       );
@@ -79,9 +87,9 @@ const Home = () => {
       ) : (
         <InfiniteScroll
           style={{ overflow: "none" }}
-          dataLength={pokemons.length}
+          dataLength={151}
           next={LoadMore}
-          hasMore={pokemons.length < max}
+          hasMore={true}
           loader={
             <div className="mb-4 d-flex justify-content-center align-item-center">
               <CircularProgress size={20} />
