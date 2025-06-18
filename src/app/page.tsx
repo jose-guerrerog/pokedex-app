@@ -1,112 +1,174 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import api from "../services/api";
 import { Pokemon } from "../types";
 import PokeCard from "../components/PokeCard";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@mui/material/CircularProgress";
-import Grid from "@mui/material/Grid2";
-import { savePokemons, verifyPokemons } from "../storage";
-import { Box } from "@mui/material";
+import Grid from "@mui/material/Grid";
+import { Box, TextField, Typography } from "@mui/material";
+import debounce from "lodash/debounce"; 
 
-let pokemonsOriginal: Pokemon[] = [];
-const perPage = 12;
-const limit = 50;
-let max = 0;
+const perPage = 24;
 
 const Home = () => {
-  const [loading, setLoading] = useState(true);
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
+  const [nextUrl, setNextUrl] = useState<string | null>(`/pokemon?limit=${perPage}`);
+  const [loading, setLoading] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [allPokemonList, setAllPokemonList] = useState<{ name: string; url: string }[]>([]);
 
-  const handlerResult = (maximum: number, pokemons: Pokemon[]) => {
-    max = maximum;
-    setPokemons(pokemons);
-  };
-
-  const loadPokemons = async () => {
-    const pokeList = await api.get(`/pokemon?limit=${limit}`);
-    const all: Pokemon[] = [];
-
-    const promises = [];
-
-    for (let i = 0; i < pokeList.data.results.length; i++) {
-      promises.push(api.get(`/pokemon/${pokeList.data.results[i].name}`))
-    }
-
-    const res = await Promise.all(promises);
-    for (let i = 0; i < res.length; i++) {
-      const pokeDetails = await api.get(
-        `/pokemon/${pokeList.data.results[i].name}`
-      );
-
-      const obj = {
-        name: pokeDetails.data.name,
-        id: pokeDetails.data.id,
-        types: pokeDetails.data.types,
-        number: pokeDetails.data.id.toString().padStart(3, "0"),
-        image:
-          pokeDetails.data.sprites.versions["generation-v"]["black-white"]
-            .animated.front_default,
-      };
-      all.push(obj);
-    }
-
-    savePokemons(all);
-    pokemonsOriginal = all;
-    handlerResult(all.length, all);
-    setLoading(false);
-  };
-
-  function LoadMore() {
-    setTimeout(() => {
-      const limit = pokemons.length + perPage;
-      setPokemons(pokemonsOriginal.slice(0, limit));
-    }, 1000);
-  }
+  // Debounce searchTerm → debouncedSearch
+  const handleDebouncedSearch = debounce((value: string) => {
+    setDebouncedSearch(value.toLowerCase());
+  }, 300);
 
   useEffect(() => {
-    setLoading(true);
-    const listLocal = verifyPokemons();
-    if (listLocal === null) {
-      loadPokemons();
-    }
+    handleDebouncedSearch(searchTerm);
+  }, [searchTerm]);
 
-    pokemonsOriginal = listLocal;
-    handlerResult(listLocal?.length, listLocal?.slice(0, perPage));
-    setLoading(false);
+  const fetchPokemons = async () => {
+    if (!nextUrl) return;
+    setLoading(true);
+    try {
+      const pokeList = await api.get(nextUrl);
+      setNextUrl(pokeList.data.next?.replace("https://pokeapi.co/api/v2", "") || null);
+
+      const promises = pokeList.data.results.map((item: any) =>
+        api.get(`/pokemon/${item.name}`)
+      );
+
+      const res = await Promise.all(promises);
+      const newPokemons = res
+        .map(({ data }) => {
+          const image =
+            data.sprites.versions["generation-v"]["black-white"].animated.front_default ??
+            data.sprites.front_default;
+
+          if (!image) return null;
+
+          return {
+            name: data.name,
+            id: data.id,
+            types: data.types,
+            number: data.id.toString().padStart(3, "0"),
+            image,
+          };
+        })
+        .filter(Boolean) as Pokemon[];
+
+      setPokemons((prev) => [...prev, ...newPokemons]);
+    } catch (err) {
+      console.error("Failed to fetch Pokémon", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    api.get(`/pokemon?limit=1010`).then((res) => {
+      setAllPokemonList(res.data.results);
+    });
+
+    fetchPokemons();
   }, []);
+
+  const searchResults =
+    debouncedSearch.length >= 2
+      ? allPokemonList.filter((p) => p.name.includes(debouncedSearch))
+      : [];
+
+  const showNoResults =
+    debouncedSearch.length >= 2 && searchResults.length === 0;
+
   return (
     <Box>
       <Header />
-      {loading || !pokemons?.length ? (
-        <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
-          <CircularProgress size={30} color="secondary"/>
-        </Box>
+      <Box px={2} mt={2}>
+        <TextField
+          fullWidth
+          label="Search Pokémon by name"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </Box>
+
+      {debouncedSearch.length >= 2 ? (
+        <>
+          {showNoResults ? (
+            <Box mt={4} px={2} textAlign="center">
+              <Typography variant="h6" color="textSecondary">
+                No Pokémon found
+              </Typography>
+            </Box>
+          ) : (
+            <Grid container spacing={3} mt={2} px={2}>
+              {searchResults.slice(0, 12).map((result) => (
+                <Grid item key={`search-${result.name}`} xs={12} sm={6} md={4}>
+                  <SinglePokemon name={result.name} />
+                </Grid>
+              ))}
+            </Grid>
+          )}
+        </>
       ) : (
-        <InfiniteScroll
-          style={{ overflow: "none" }}
-          dataLength={pokemons.length}
-          next={LoadMore}
-          hasMore={pokemons.length < max}
-          loader={
-            <div className="mb-4 d-flex justify-content-center align-item-center">
-              <CircularProgress size={20} />
-            </div>
-          }
-        >
-          <Grid container mt={4} spacing={3}>
-            {pokemons.map((pokemon, index) => (
-              <Grid size={{ md: 4, sm: 6, xs: 12 }} key={index}>
-                <PokeCard {...pokemon} key={`pokemon-${index}`} isClickable />
+        <>
+          {pokemons.length === 0 && loading ? (
+            <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+              <CircularProgress size={30} color="secondary" />
+            </Box>
+          ) : (
+            <InfiniteScroll
+              dataLength={pokemons.length}
+              next={fetchPokemons}
+              hasMore={!!nextUrl}
+              loader={
+                <Box className="mb-4 d-flex justify-content-center items-center">
+                  <CircularProgress size={20} />
+                </Box>
+              }
+            >
+              <Grid container spacing={3} mt={2} px={2}>
+                {pokemons.map((pokemon) => (
+                  <Grid item key={`infinite-${pokemon.id}`} xs={12} sm={6} md={4}>
+                    <PokeCard {...pokemon} isClickable />
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-        </InfiniteScroll>
+            </InfiniteScroll>
+          )}
+        </>
       )}
     </Box>
   );
 };
 
 export default Home;
+
+const SinglePokemon = ({ name }: { name: string }) => {
+  const [pokemon, setPokemon] = useState<Pokemon | null>(null);
+
+  useEffect(() => {
+    api.get(`/pokemon/${name}`).then(({ data }) => {
+      const image =
+        data.sprites.versions["generation-v"]["black-white"].animated.front_default ??
+        data.sprites.front_default;
+
+      if (!image) return;
+
+      setPokemon({
+        name: data.name,
+        id: data.id,
+        types: data.types,
+        number: data.id.toString().padStart(3, "0"),
+        image,
+      });
+    });
+  }, [name]);
+
+  return pokemon ? <PokeCard {...pokemon} isClickable /> : <CircularProgress size={20} />;
+};

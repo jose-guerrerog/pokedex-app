@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { capitalizeFirstLetter } from "../utils";
 import Link from "next/link";
 import { PokemonCard } from "../types";
@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { mapTypeBackground, mapTypeColor } from "../constants";
+import Image from "next/image";
 
 const PokeCard = ({
   name,
@@ -27,13 +28,9 @@ const PokeCard = ({
 
   return (
     <Link
-      href={{
-        pathname: `/details/${name}`,
-      }}
+      href={{ pathname: `/details/${name}` }}
       {...(!isClickable && {
-        style: {
-          cursor: "default",
-        },
+        style: { cursor: "default" },
       })}
     >
       <Card
@@ -56,20 +53,17 @@ const PokeCard = ({
           }
         />
         <CardContent>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <img
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Image
               onError={() => setError(true)}
               className="animation-up-down"
               alt={name}
               title={name}
               src={image}
-              width="80"
-              height="80"
+              width={80}
+              height={80}
+              loading="lazy"
+              unoptimized
             />
           </Box>
           <Box
@@ -81,21 +75,19 @@ const PokeCard = ({
               mt: 3,
             }}
           >
-            {types.map((item, index) => {
-              return (
-                <Chip
-                  label={
-                    <Typography variant="body1" color="#FFF">
-                      {capitalizeFirstLetter(item.type.name)}
-                    </Typography>
-                  }
-                  key={`type-${index}`}
-                  sx={{
-                    background: mapTypeColor.get(item.type.name),
-                  }}
-                />
-              );
-            })}
+            {types.map((item, index) => (
+              <Chip
+                label={
+                  <Typography variant="body1" color="#FFF">
+                    {capitalizeFirstLetter(item.type.name)}
+                  </Typography>
+                }
+                key={`type-${index}`}
+                sx={{
+                  background: mapTypeColor.get(item.type.name),
+                }}
+              />
+            ))}
           </Box>
         </CardContent>
       </Card>
