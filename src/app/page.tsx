@@ -9,7 +9,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@mui/material/CircularProgress";
 import Grid from "@mui/material/Grid";
 import { Box, TextField, Typography } from "@mui/material";
-import debounce from "lodash/debounce"; 
+import debounce from "lodash/debounce";
 
 const perPage = 24;
 
@@ -21,7 +21,6 @@ const Home = () => {
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [allPokemonList, setAllPokemonList] = useState<{ name: string; url: string }[]>([]);
 
-  // Debounce searchTerm → debouncedSearch
   const handleDebouncedSearch = debounce((value: string) => {
     setDebouncedSearch(value.toLowerCase());
   }, 300);
@@ -85,15 +84,29 @@ const Home = () => {
     debouncedSearch.length >= 2 && searchResults.length === 0;
 
   return (
-    <Box>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        background: "linear-gradient(120deg, #fdfbfb, #ebedee)",
+        pb: 4,
+      }}
+    >
       <Header />
-      <Box px={2} mt={2}>
+      <Box px={{ xs: 2, sm: 4, md: 6 }} mt={2}>
         <TextField
           fullWidth
           label="Search Pokémon by name"
           variant="outlined"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
+          InputProps={{
+            sx: {
+              backgroundColor: "white",
+              borderRadius: 2,
+              boxShadow: 1,
+              px: 1,
+            },
+          }}
         />
       </Box>
 

@@ -14,6 +14,7 @@ export const mapTypeColor = new Map<string, string>([
   ['poison', '#9141CB'],
   ['psychic', '#EF4179'],
   ['rock', '#AFA981'],
+  ['dark', '#B88E6F'],
   ['steel', '#60A1B8'],
   ['water', '#2980EF'],
 ])
@@ -34,6 +35,7 @@ export const mapTypeBackground = new Map<string, string>([
   ['poison', '#B884DD'],
   ['psychic', '#F584A8'],
   ['rock', '#CBC7AD'],
+  ['dark', '#705746'],
   ['steel', '#98C2D1'],
   ['water', '#74ACF5'],
 ])

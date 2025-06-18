@@ -18,7 +18,7 @@ body {
 
 body {
   color: var(--foreground);
-  background:  #f8f8f8; 
+  background: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
   font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
