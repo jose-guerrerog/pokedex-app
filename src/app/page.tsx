@@ -87,7 +87,7 @@ const Home = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        background: "linear-gradient(120deg, #fdfbfb, #ebedee)",
+        background: "transparent",
         pb: 4,
         position: "relative",
         overflow: "hidden",
@@ -121,34 +121,34 @@ const Home = () => {
 
       {/* Search Input */}
       <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 4,
-          mb: 2,
-          px: 2,
-          zIndex: 1,
-          position: "relative",
-        }}
-      >
-        <Box sx={{ width: "100%", maxWidth: "500px" }}>
-          <TextField
-            fullWidth
-            label="Search Pokémon by name"
-            variant="outlined"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            InputProps={{
-              sx: {
-                backgroundColor: "white",
-                borderRadius: 2,
-                boxShadow: 1,
-                px: 1,
-              },
-            }}
-          />
-        </Box>
-      </Box>
+  sx={{
+    display: "flex",
+    justifyContent: "center",
+    mt: 1,
+    mb: 4, // ⬅ more space after input
+    px: 2,
+    zIndex: 1,
+    position: "relative",
+  }}
+>
+  <Box sx={{ width: "100%", maxWidth: "500px" }}>
+    <TextField
+      fullWidth
+      label="Search Pokémon by name"
+      variant="outlined"
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      InputProps={{
+        sx: {
+          backgroundColor: "white",
+          borderRadius: 2,
+          boxShadow: 1,
+          px: 1,
+        },
+      }}
+    />
+  </Box>
+</Box>
 
       {/* Main Content */}
       {debouncedSearch.length >= 2 ? (

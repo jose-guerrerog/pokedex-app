@@ -2,14 +2,13 @@
 
 import { useEffect, useState } from "react";
 import api from "@/services/api";
-import Grid from "@mui/material/Grid2";
-import { PokemonDetails } from "@/types";
-import { Box, CircularProgress } from "@mui/material";
+import { useParams } from "next/navigation";
+import Header from "@/components/Header";
 import PokeCard from "@/components/PokeCard";
 import PokeDetails from "@/components/PokeDetails";
 import PokeStats from "@/components/PokeStats";
-import { useParams } from "next/navigation";
-import Header from "@/components/Header";
+import { Box, Grid, CircularProgress } from "@mui/material";
+import { PokemonDetails } from "@/types";
 
 type Item = {
   ability: {
@@ -36,7 +35,7 @@ const DetailsPokemon = () => {
         }`;
       });
 
-      const pokemonDetails = {
+      const details: PokemonDetails = {
         id: dataPokemonData.id,
         name: dataPokemonData.name,
         types: dataPokemonData.types,
@@ -49,7 +48,8 @@ const DetailsPokemon = () => {
         habitat: dataPokemonAddDetails.habitat?.name,
         abilities,
       };
-      setPokemonDetails(pokemonDetails);
+
+      setPokemonDetails(details);
     } catch (error) {
       console.log(error);
     }
@@ -61,7 +61,7 @@ const DetailsPokemon = () => {
 
   if (!pokemonDetails) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
         <CircularProgress size={30} color="secondary" />
       </Box>
     );
@@ -72,36 +72,40 @@ const DetailsPokemon = () => {
       <Header />
       <Box
         sx={{
+          minHeight: "100vh",
           display: "flex",
-          justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
+          px: 2,
+          pb: 6,
         }}
-        mt={5}
       >
-        <Grid container sx={{ maxWidth: "800px" }} spacing={2}>
-          <Grid container sx={{ alignItems: "center" }}>
-            <Grid size={{ sm: 6, xs: 12 }}>
-              <PokeCard
-                name={pokemonDetails?.name || ""}
-                id={pokemonDetails?.id || 0}
-                types={pokemonDetails?.types}
-                image={pokemonDetails.image}
-                number="2"
-              />
-            </Grid>
-            <Grid size={{ sm: 6, xs: 12 }}>
-              <PokeDetails
-                name={pokemonDetails?.name || ""}
-                id={pokemonDetails?.id || 0}
-                types={pokemonDetails?.types}
-                capture_rate={pokemonDetails.capture_rate}
-                height={pokemonDetails.height}
-                weight={pokemonDetails.weight}
-                abilities={pokemonDetails.abilities}
-                habitat={pokemonDetails.habitat}
-              />
-            </Grid>
+        {/* Pokémon Card */}
+        <Box sx={{ mt: 4, mb: 4 }}>
+          <PokeCard
+            name={pokemonDetails.name}
+            id={pokemonDetails.id}
+            types={pokemonDetails.types}
+            image={pokemonDetails.image}
+            number={pokemonDetails.id.toString().padStart(3, "0")}
+          />
+        </Box>
+
+        {/* Details + Stats side-by-side */}
+        <Grid container spacing={4} justifyContent="center" maxWidth="md">
+          <Grid item xs={12} md={6}>
+            <PokeDetails
+              id={pokemonDetails.id}
+              height={pokemonDetails.height}
+              weight={pokemonDetails.weight}
+              capture_rate={pokemonDetails.capture_rate}
+              abilities={pokemonDetails.abilities}
+              habitat={pokemonDetails.habitat}
+              name={pokemonDetails.name}
+              types={pokemonDetails.types}
+            />
           </Grid>
-          <Grid size={12} sx={{ display: "flex", justifyContent: "center" }}>
+          <Grid item xs={12} md={6}>
             <PokeStats stats={pokemonDetails.stats} />
           </Grid>
         </Grid>

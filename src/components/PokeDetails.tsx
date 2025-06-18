@@ -1,49 +1,49 @@
-import { useState, useEffect } from "react";
-import Grid from "@mui/material/Grid2";
-import { PokemonDetailComp } from "../types";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, Typography, Box } from "@mui/material";
+import { PokemonDetailComp } from "@/types";
+import { InfoOutlined } from "@mui/icons-material";
 
 const PokeDetails = ({
-  id,
   height,
   weight,
-  abilities,
   capture_rate,
+  abilities,
   habitat,
 }: PokemonDetailComp) => {
-  const [, setError] = useState(false);
-
-  useEffect(() => {
-    setError(false);
-  }, [id]);
-
   return (
-    <Card sx={{ minCard: '250px', borderRadius: 4 }}>
+    <Card sx={{ borderRadius: 4, boxShadow: 3 }}>
       <CardContent>
-        <Grid container rowGap={2}>
-          <Grid size={6}>
-            <Typography variant="h6" fontWeight={700}>Height</Typography>
-            <Typography variant="body1">{`${Math.round(height * 10) / 100} m`}</Typography>
-          </Grid>
-          <Grid size={6}>
-            <Typography variant="h6" fontWeight={700}>Capture rate</Typography>
-            <Typography variant="body1">{`${
-              Math.round(capture_rate * 100) / 100
-            }%`}</Typography>
-          </Grid>
-          <Grid size={6}>
-            <Typography variant="h6" fontWeight={700}>Weight</Typography>
-            <Typography variant="body1">{`${Math.round(weight * 10) / 100} Kg`}</Typography>
-          </Grid>
-          <Grid size={6}>
-            <Typography variant="h6" fontWeight={700}>Abilities</Typography>
-            <Typography variant="body1">{abilities}</Typography>
-          </Grid>
-          <Grid size={6}>
-            <Typography variant="h6" fontWeight={700}>Habitat</Typography>
-            <Typography variant="body1">{habitat}</Typography>
-          </Grid>
-        </Grid>
+        <Box display="flex" alignItems="center" mb={2}>
+          <InfoOutlined sx={{ mr: 1 }} />
+          <Typography variant="h6" fontWeight="bold">
+            Details
+          </Typography>
+        </Box>
+
+        <Box mb={1}>
+          <Typography>
+            📏 <strong>Height:</strong> {(height / 10).toFixed(1)} m
+          </Typography>
+        </Box>
+        <Box mb={1}>
+          <Typography>
+            ⚖️ <strong>Weight:</strong> {(weight / 10).toFixed(1)} kg
+          </Typography>
+        </Box>
+        <Box mb={1}>
+          <Typography>
+            🎯 <strong>Capture Rate:</strong> {capture_rate}%
+          </Typography>
+        </Box>
+        <Box mb={1}>
+          <Typography>
+            🧠 <strong>Abilities:</strong> {abilities}
+          </Typography>
+        </Box>
+        <Box>
+          <Typography>
+            🌿 <strong>Habitat:</strong> {habitat}
+          </Typography>
+        </Box>
       </CardContent>
     </Card>
   );
