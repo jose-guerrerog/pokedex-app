@@ -89,27 +89,68 @@ const Home = () => {
         minHeight: "100vh",
         background: "linear-gradient(120deg, #fdfbfb, #ebedee)",
         pb: 4,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
+      {/* Background bubbles */}
+      <Box sx={{
+        position: "absolute",
+        width: 200,
+        height: 200,
+        borderRadius: "50%",
+        background: "rgba(255, 204, 0, 0.2)",
+        top: "10%",
+        left: "5%",
+        filter: "blur(80px)",
+        zIndex: 0,
+      }} />
+      <Box sx={{
+        position: "absolute",
+        width: 300,
+        height: 300,
+        borderRadius: "50%",
+        background: "rgba(0, 100, 255, 0.15)",
+        bottom: "5%",
+        right: "10%",
+        filter: "blur(100px)",
+        zIndex: 0,
+      }} />
+
       <Header />
-      <Box px={{ xs: 2, sm: 4, md: 6 }} mt={2}>
-        <TextField
-          fullWidth
-          label="Search Pokémon by name"
-          variant="outlined"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          InputProps={{
-            sx: {
-              backgroundColor: "white",
-              borderRadius: 2,
-              boxShadow: 1,
-              px: 1,
-            },
-          }}
-        />
+
+      {/* Search Input */}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 4,
+          mb: 2,
+          px: 2,
+          zIndex: 1,
+          position: "relative",
+        }}
+      >
+        <Box sx={{ width: "100%", maxWidth: "500px" }}>
+          <TextField
+            fullWidth
+            label="Search Pokémon by name"
+            variant="outlined"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            InputProps={{
+              sx: {
+                backgroundColor: "white",
+                borderRadius: 2,
+                boxShadow: 1,
+                px: 1,
+              },
+            }}
+          />
+        </Box>
       </Box>
 
+      {/* Main Content */}
       {debouncedSearch.length >= 2 ? (
         <>
           {showNoResults ? (
@@ -119,19 +160,21 @@ const Home = () => {
               </Typography>
             </Box>
           ) : (
-            <Grid container spacing={3} mt={2} px={2}>
-              {searchResults.slice(0, 12).map((result) => (
-                <Grid item key={`search-${result.name}`} xs={12} sm={6} md={4}>
-                  <SinglePokemon name={result.name} />
-                </Grid>
-              ))}
-            </Grid>
+            <Box px={2} py={2} sx={{ maxWidth: "1200px", margin: "0 auto", zIndex: 1, position: "relative" }}>
+              <Grid container spacing={3}>
+                {searchResults.slice(0, 12).map((result) => (
+                  <Grid item key={`search-${result.name}`} xs={12} sm={6} md={4}>
+                    <SinglePokemon name={result.name} />
+                  </Grid>
+                ))}
+              </Grid>
+            </Box>
           )}
         </>
       ) : (
         <>
           {pokemons.length === 0 && loading ? (
-            <Box sx={{ display: "flex", justifyContent: "center" }} mt={8}>
+            <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "40vh" }}>
               <CircularProgress size={30} color="secondary" />
             </Box>
           ) : (
@@ -140,18 +183,20 @@ const Home = () => {
               next={fetchPokemons}
               hasMore={!!nextUrl}
               loader={
-                <Box className="mb-4 d-flex justify-content-center items-center">
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", py: 4 }}>
                   <CircularProgress size={20} />
                 </Box>
               }
             >
-              <Grid container spacing={3} mt={2} px={2}>
-                {pokemons.map((pokemon) => (
-                  <Grid item key={`infinite-${pokemon.id}`} xs={12} sm={6} md={4}>
-                    <PokeCard {...pokemon} isClickable />
-                  </Grid>
-                ))}
-              </Grid>
+              <Box px={2} py={2} sx={{ maxWidth: "1200px", margin: "0 auto", zIndex: 1, position: "relative" }}>
+                <Grid container spacing={3}>
+                  {pokemons.map((pokemon) => (
+                    <Grid item key={`infinite-${pokemon.id}`} xs={12} sm={6} md={4}>
+                      <PokeCard {...pokemon} isClickable />
+                    </Grid>
+                  ))}
+                </Grid>
+              </Box>
             </InfiniteScroll>
           )}
         </>
