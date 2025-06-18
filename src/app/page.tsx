@@ -37,7 +37,7 @@ const Home = () => {
       const pokeList = await api.get(nextUrl);
       setNextUrl(pokeList.data.next?.replace("https://pokeapi.co/api/v2", "") || null);
 
-      const promises = pokeList.data.results.map((item: any) =>
+      const promises = pokeList.data.results.map((item: { name: string; url: string }) =>
         api.get(`/pokemon/${item.name}`)
       );
 
